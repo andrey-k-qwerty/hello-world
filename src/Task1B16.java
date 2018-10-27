@@ -1,4 +1,4 @@
-
+/*	Построить треугольник Паскаля для первого положительного числа	*/
 public class Task1B16 {
 	public static long fact(int val) {
 		long result = 1;
