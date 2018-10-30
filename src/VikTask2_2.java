@@ -44,7 +44,7 @@ public class VikTask2_2 {
 		}
 		TreeMap<String, Integer> treeMap = new TreeMap<String, Integer>(hm);
 		System.out.println(treeMap);
-		System.out.println(hm);
+	//	System.out.println(hm);
 
 	}
 }
