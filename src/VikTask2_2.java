@@ -23,7 +23,7 @@ public class VikTask2_2 {
 
 	public static void main(String[] args) throws IOException {
 
-		String currentLine = "один, два.три;четыре!пять?шесть-семь восемь;один,, два....три;четыре!?пять?-семь восемь";
+		String dataLine = "один, два.три;четыре!пять?шесть-семь восемь;один,, два....три;четыре!?пять?-семь восемь";
 		// BufferedReader br = new BufferedReader(new FileReader("source.txt"));
 		BufferedReader br = new BufferedReader(new StringReader(dataLine));
 		
