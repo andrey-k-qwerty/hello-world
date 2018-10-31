@@ -1,9 +1,5 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -29,10 +25,11 @@ public class VikTask2_2 {
 
 		String currentLine = "один, два.три;четыре!пять?шесть-семь восемь;один,, два....три;четыре!?пять?-семь восемь";
 		// BufferedReader br = new BufferedReader(new FileReader("source.txt"));
-		BufferedReader br = new BufferedReader(new StringReader(currentLine));
-		System.out.println(br);
+		BufferedReader br = new BufferedReader(new StringReader(dataLine));
+		
 		HashMap<String, Integer> hm = new HashMap<>();
-		while ((currentLine = br.readLine()) != null) 
+		String currentLine = "";
+		while ((currentLine  = br.readLine()) != null) 
 		{
 			String[] changeLine = currentLine.replaceAll("[\\.,;!\\?-]", " ").split(" +");
 			for (String str : changeLine) 
@@ -42,9 +39,10 @@ public class VikTask2_2 {
 			}
 
 		}
+		br.close();
 		TreeMap<String, Integer> treeMap = new TreeMap<String, Integer>(hm);
 		System.out.println(treeMap);
 	//	System.out.println(hm);
-
+		
 	}
 }
