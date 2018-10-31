@@ -44,10 +44,10 @@ public class VicTask2_3 {
 		for(Map.Entry<String,Integer> entry : treeMap.entrySet()) {
 			  String key = entry.getKey();
 			  Integer value = entry.getValue();
-			  return String.format("Contact {name=%s, lastName=%s, nickName=%s}", name, lName, nick);
-               sb.append(key).append(" ").append(value)
-			  System.out.println(key + " => " + value);
-               sb.toString().f
+			//   String.format("%10s %4d", name, lName, nick);
+           //    sb.append(key).append(" ").append(value)
+			  System.out.println(String.format("%"+maxLenghtWord+"s %4d", key, value));
+             //  sb.toString().f
 			}
 			
 		}
