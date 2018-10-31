@@ -30,7 +30,6 @@ public class VikTask2_2 {
 		String currentLine = "один, два.три;четыре!пять?шесть-семь восемь;один,, два....три;четыре!?пять?-семь восемь";
 		// BufferedReader br = new BufferedReader(new FileReader("source.txt"));
 		BufferedReader br = new BufferedReader(new StringReader(currentLine));
-		System.out.println(br);
 		HashMap<String, Integer> hm = new HashMap<>();
 		while ((currentLine = br.readLine()) != null) 
 		{
@@ -43,7 +42,7 @@ public class VikTask2_2 {
 
 		}
 		TreeMap<String, Integer> treeMap = new TreeMap<String, Integer>(hm);
-		System.out.println(treeMap);
+		System.out.println(treeMap.toString().replaceAll("[{},]", "\n"));
 	//	System.out.println(hm);
 
 	}
