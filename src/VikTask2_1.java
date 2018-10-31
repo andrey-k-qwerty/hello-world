@@ -5,15 +5,14 @@ import java.util.Properties;
 import java.util.Scanner;
 import java.util.Set;
 
-/* В консоли вывести запрос на ввод 2-х параметров. прочитать с консоли эти 2 параметра и 
-   записать их в файл пропертей (java class Properties).
-   Потом прочитать и обратно вывести все в консоль*/
+/* РІ РєРѕРЅСЃРѕР»Рё РІС‹РІРµСЃС‚Рё Р·Р°РїСЂРѕСЃ РЅР° РІРІРѕРґ 2-С… РїР°СЂР°РјРµС‚СЂРѕРІ. РїСЂРѕС‡РёС‚Р°С‚СЊ СЃ РєРѕРЅСЃРѕР»Рё СЌС‚Рё 2 РїР°СЂР°РјРµС‚СЂР° Рё 
+Р·Р°РїРёСЃР°С‚СЊ РёС… РІ С„Р°Р№Р» РїСЂРѕРїРµСЂС‚РµР№ (java class Properties). РџРѕС‚РѕРј РїСЂРѕС‡РёС‚Р°С‚СЊ Рё РѕР±СЂР°С‚РЅРѕ РІС‹РІРµСЃС‚Рё РІСЃРµ РІ РєРѕРЅСЃРѕР»СЊ*/
 public class VikTask2_1 {
 
 		
 	public static void main(String[] args) throws IOException {
 		
-		System.out.println("Веддите два параметра через пробел:");
+		System.out.println("Р’РІРµРґРёС‚Рµ РґРІР° РїР°СЂР°РјРµС‚СЂР° С‡РµСЂРµР· РїСЂРѕР±РµР»:");
 		
 		Scanner scan = new Scanner(System.in);
 		Properties prop = new Properties();
@@ -27,12 +26,12 @@ public class VikTask2_1 {
 		 
 		scan.close();
 
-		System.out.println("Запись в файл");
+		System.out.println("РЎРѕС…СЂР°РЅСЏРµРј РІ С„Р°Р№Р»");
 		prop.store(new FileOutputStream("property.ini"), "comments");
 		
 		System.out.println("-------------");
 	
-		System.out.println("Чтение из  файла");
+		System.out.println("Р§РёС‚Р°РµРј РёР· С„Р°Р№Р»Р°");
 		prop.load(new FileInputStream("property.ini"));
 		
 		Set<String> keys = prop.stringPropertyNames();

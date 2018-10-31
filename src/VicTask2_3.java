@@ -1,3 +1,13 @@
+/*Консольная программа.
+Предыдущая задача. Только результат вывести в файл (можно захардкодить имя и путь к файлу).
+Формат вывода - по 10 пар "слово количествоПовторений" в каждой строке.
+Пары разделены символом "|". В начале и в конце строк этого символа нет.
+На каждое слово отвести места, как длина самого длинного слова в файле.
+Более короткие слова дополнить слева пробелами.
+На каждое число отвести N символов, слева дополнить пробелами.
+Число N запросить с консоли в начале работы программы.
+Вывести в файл одной строкой. !?
+Подсказка - для конкатенации строк выбрать правильный способ, обеспечивающий экономию памяти и быстродействие.*/
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -37,20 +47,26 @@ public class VicTask2_3 {
 		  
 		filterLineReader.close();
 		
-		PrintWriter printWriter = new PrintWriter("out.txt");
-	//	System.out.println(treeMap.toString());
 		
+	//	System.out.println(treeMap.toString());
+		int i = 1;
 		StringBuilder sb = new StringBuilder();
 		for(Map.Entry<String,Integer> entry : treeMap.entrySet()) {
 			  String key = entry.getKey();
 			  Integer value = entry.getValue();
-			//   String.format("%10s %4d", name, lName, nick);
-           //    sb.append(key).append(" ").append(value)
-			  System.out.println(String.format("%"+maxLenghtWord+"s %4d", key, value));
-             //  sb.toString().f
+			  sb.append(String.format("%"+(maxLenghtWord + 1) +"s %d", key, value));
+               if (i%3 == 0)
+            	   sb.append("\n");
+		
+             i++;
 			}
-			
+		  System.out.println(sb.toString());	
+		  
+		 PrintWriter printWriter = new PrintWriter("out.txt"); 
+		 printWriter.print(sb.toString());
+		 printWriter.close();
 		}
+	
        
 	}
 
