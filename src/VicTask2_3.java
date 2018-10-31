@@ -55,6 +55,7 @@ public class VicTask2_3 {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
 			sb.append(String.format("%" + (maxLenghtWord + 1) + "s %d", key, value));
+			
 			if (i % 2 == 0)
 				sb.append("\n");
 
