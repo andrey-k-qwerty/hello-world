@@ -41,7 +41,7 @@ public class VikTask2_2 {
 		}
 		br.close();
 		TreeMap<String, Integer> treeMap = new TreeMap<String, Integer>(hm);
-		System.out.println(treeMap.toString().replaceAll("[,]", "\n").replaceAll("[{}]", " "));
+		System.out.println(treeMap.toString().replaceAll("[,]", "\n").replaceAll("[{}=]", " "));
 	//	System.out.println(hm);
 		
 	}
