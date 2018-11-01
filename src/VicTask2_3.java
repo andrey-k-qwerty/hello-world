@@ -48,15 +48,19 @@ public class VicTask2_3 {
 		filterLineReader.close();
 
 		// System.out.println(treeMap.toString());
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Введите количество разрядов для числа:");
+		Integer countDigit =  scanner.nextInt();
+		if (countDigit == null ) countDigit = 2;
 		int i = 1;
 		StringBuilder sb = new StringBuilder();
 		for (Map.Entry<String, Integer> entry : treeMap.entrySet())
 		{
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-			sb.append(String.format("%" + (maxLenghtWord + 1) + "s %d", key, value));
-			
-			if (i % 2 == 0)
+			sb.append(String.format("%" + (maxLenghtWord + 1) + "s %"+ countDigit + "d", key, value));
+			 
+			if (i % 3 == 0)
 				sb.append("\n");
 
 			i++;
