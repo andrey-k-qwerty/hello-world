@@ -21,7 +21,7 @@ public class VicTask2_3 {
 	public static void main(String[] args) throws IOException
 	{
 		String dataLine = "один, два.три;четыре!пять?шесть-семь восемь;один,, два....три;четыре!?пять?-семь восемь";
-		// Соз
+		// 
 		FilterLineReader filterLineReader = new FilterLineReader(new StringReader(dataLine));
 
 		filterLineReader.regex = "[\\.,;!\\?-]";
@@ -48,17 +48,21 @@ public class VicTask2_3 {
 		filterLineReader.close();
 
 		// System.out.println(treeMap.toString());
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Введите количество разрядов для числа:");
+		int countDigit =  scanner.nextInt();
 		int i = 1;
 		StringBuilder sb = new StringBuilder();
 		for (Map.Entry<String, Integer> entry : treeMap.entrySet())
 		{
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-			sb.append(String.format("%" + (maxLenghtWord + 1) + "s %d", key, value));
-			
-			if (i % 2 == 0)
+			sb.append(String.format("%" + (maxLenghtWord) + "s %"+ countDigit + "d", key, value));
+			 
+			if (i % 10 == 0)
 				sb.append("\n");
-
+			else
+				sb.append(" |");
 			i++;
 		}
 		System.out.println(sb.toString());

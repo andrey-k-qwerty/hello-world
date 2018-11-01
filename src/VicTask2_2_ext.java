@@ -28,7 +28,7 @@ public class VicTask2_2_ext {
 		    }  
 		  
 		filterLineReader.close();
-		System.out.println(treeMap.toString().replaceAll("[,]", "\n").replaceAll("[{}]", " "));
+		System.out.println(treeMap.toString().replaceAll("[,]", "\n").replaceAll("[{}=]", " "));
 	}
 
 }
