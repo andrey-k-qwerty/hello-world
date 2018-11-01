@@ -48,8 +48,10 @@ public class VicTask2_4 {
 		Scanner scannerConsole = new Scanner(System.in);
 		System.out.println("Введите количество разрядов для числа:");
 		Integer countDigit =  scannerConsole.nextInt();
+		scannerConsole.close();
 		int i = 1;
 		StringBuilder sb = new StringBuilder();
+		
 		for (Map.Entry<String, Integer> entry : treeMap.entrySet())
 		{
 			String key = entry.getKey();
