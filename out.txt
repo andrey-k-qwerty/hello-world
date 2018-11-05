@@ -1,3 +1,0 @@
-eight  2| five  2| four  2
-seven  2|  six  1|  ten  1
-three  2|  two  2
