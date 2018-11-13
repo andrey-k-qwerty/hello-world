@@ -46,7 +46,7 @@ public class VicTaskCSV {
 			String pathProperty;
 			String pathCSV = null;
 			String inputFormatDate = "dd-MM-yyyy"; 
-			String outputFormatDate = "dd_MM_yyyy"; 
+			String outputFormatDate = "dd.MM.yyyy"; 
        // Файл свойст перекрывает параметры по умолчанию и парметры программы
 			pathProperty = System.getProperty("pathProperty");
 
@@ -153,13 +153,14 @@ public class VicTaskCSV {
           
 							// field1 - string, f2-int,f3-double,f4-date,f5-string
 							// Валидация - стринги не трогаем, int и double =0, date пока в new Date
-			
-						if(!recorddEmlpoyee[1].matches("[-+]?\\d+"))
+			        // TODO вынести в метод Employee
+							// TODO Какие поля должны быть обязательны и что ставить по умолчанию?
+						if(!recorddEmlpoyee[1].matches(Employee.validateInteger))
 								recorddEmlpoyee[1] = "0";
 							// double - проверим пока как целое
-							if(!recorddEmlpoyee[2].matches("[-+]?\\d+[,.]?\\d*"))
+							if(!recorddEmlpoyee[2].matches(Employee.validateDouble))
 								recorddEmlpoyee[2] = "0.0";
-							if(!recorddEmlpoyee[3].matches("(0?[1-9]|[12][0-9]|3[01])[- /\\.](0?[1-9]|1[012])[- /\\.](19|20)\\d{2}"))
+							if(!recorddEmlpoyee[3].matches(Employee.validateDate))
 								recorddEmlpoyee[3] = new SimpleDateFormat(inputFormatDate).format(new Date());
 							// Заполняем...
 							try
@@ -203,6 +204,9 @@ class Employee {
 	String comment;
 	static String inputFormatDate = "dd.MM.yyyy"; // inputFormatDate
 	static String outputFormatDate = "dd.MM.yyyy";
+	static String validateInteger = "[-+]?\\d+";
+	static String validateDouble = "[-+]?\\d+[,.]?\\d*";
+	static String validateDate = "(0?[1-9]|[12][0-9]|3[01])[- /\\.](0?[1-9]|1[012])[- /\\.](19|20)\\d{2}";
 
 	public Employee(String name, int pesonalNumber, double salary, Date hiredDay, String comment) {
 		super();
