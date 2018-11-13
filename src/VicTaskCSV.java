@@ -3,14 +3,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.Locale;
+import java.util.Properties;
 import java.util.Scanner;
+
 /*
 задан CSV файл. Например 5 полей, разделенных точкой-запятой. Пусть поле1 имеет тип строка, поле2 int, поле 3 double, поле4 
 DateTime, поле 5 строка. Надо его прочитать в список объектов. В файле могут быть проблемы. Надо показать, что ты умеешь 
@@ -30,8 +29,8 @@ DateTime, поле 5 строка. Надо его прочитать в спи�
  местами)
 */
 /**
- * Программа может вызываться с параметрами java VicTaskCSV -Dseparator=char
- * -DfilePathProperty=fileProperty -DfileCSV=fileCSV <br>
+ * Программа может вызываться с параметрами java VicTaskCSV -DcsvSeparator=разделитель,
+ * -DpathProperty=путь к файлу, -DpathCSV=путь к файлу, -DinputFormatDate=dd.MM.yyyy <br>
  * param -s символ разделителя в файле между полями записи <br>
  * 
  */
@@ -40,53 +39,83 @@ public class VicTaskCSV {
 	public static void main(String[] args)
 		{
 
-			String csvSeparator;
 			File fileCSV = null;
 			File fileProperty = null;
-			
-			String filePathProperty;
-			String filePathCSV;
-			String  originalFormatDate = "dd-MM-yyyy";
-			
-     
-			csvSeparator = (System.getProperty("separator") == null) ? ";"
-					: System.getProperty("separator");
-			filePathProperty = System.getProperty("filePathProperty");
-			filePathCSV = System.getProperty("filePathCSV");
-      
+
+			String csvSeparator = ",";
+			String pathProperty;
+			String pathCSV = null;
+			String inputFormatDate = "dd-MM-yyyy"; 
+			String outputFormatDate = "dd_MM_yyyy"; 
+       // Файл свойст перекрывает параметры по умолчанию и парметры программы
+			pathProperty = System.getProperty("pathProperty");
+
 			Scanner scanner = new Scanner(System.in);
 
-			if(filePathProperty == null)
+			boolean isPathProperty = false;
+			if(pathProperty == null)
 				{
-					System.out.println("Не задан файл свойств. Введите путь и имя файла свойств или"
+					System.out.print("Не задан файл свойств. Введите путь и имя файла свойств или"
 							+ "нажмите Enter чтобы использовать по умолчанию.");
-					while ((filePathProperty = scanner.nextLine()) != null)
+					while ((pathProperty = scanner.nextLine()) != null)
 						{
 
-							if(filePathProperty.isEmpty())
+							if(pathProperty.isEmpty())
 								break;
-							fileProperty = new File(filePathProperty);
+							fileProperty = new File(pathProperty);
 							if(!fileProperty.exists())
 								{
-									System.out.println("Такого файла не существует. Нажмите Enter чтобы использовать"
+									System.out.print("Такого файла не существует. Нажмите Enter чтобы использовать"
 											+ " по умолчанию или ввидите правильный путь к файлу");
 								} else
 								{
-									// TO-DO Сделать загрузку свойств, пока использую по умолчанию
+									isPathProperty = true;
+									break;
 								}
 
 						}
-				}// тут тоже необходим загрузка свойств
+				} else
+					fileProperty = new File(pathProperty);	
+			
 
-			if(filePathCSV == null)
+			if(isPathProperty || !pathProperty.isEmpty() )
+				{
+					Properties properties = new Properties();
+					try
+						{
+							properties.load(new FileReader(fileProperty));
+
+							pathCSV = properties.getProperty("pathCSV", System.getProperty("pathCSV"));
+							csvSeparator = properties.getProperty("csvSeparator", csvSeparator);
+							inputFormatDate = properties.getProperty("inputFormatDate", inputFormatDate);
+							outputFormatDate = properties.getProperty("outputFormatDate", outputFormatDate);
+
+						} catch (FileNotFoundException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				} else // загрузка по умолчанию
+				{
+					pathCSV = System.getProperty("pathCSV");
+					csvSeparator = System.getProperty("csvSeparator", csvSeparator);
+					inputFormatDate = System.getProperty("inputFormatDate", inputFormatDate);
+					outputFormatDate = System.getProperty("outputFormatDate", outputFormatDate);
+				}
+
+			if(pathCSV == null)
 				{
 					System.out.println("Не задан файл CSV. Введите путь и имя файла  или" + "нажмите Enter чтобы иыйти.");
-					while ((filePathCSV = scanner.nextLine()) != null)
+					while ((pathCSV = scanner.nextLine()) != null)
 						{
 
-							if(filePathCSV.isEmpty())
+							if(pathCSV.isEmpty())
 								break;
-							fileCSV = new File(filePathCSV);
+							fileCSV = new File(pathCSV);
 							if(!fileCSV.exists())
 								{
 									System.out.println("Такого файла не существует. Нажмите Enter чтобы использовать"
@@ -98,50 +127,56 @@ public class VicTaskCSV {
 								}
 
 						}
-				} else	fileCSV = new File(filePathCSV);
-		  	scanner.close();
-        ArrayList<Employee> listEmployee = new ArrayList<>();
+				} else
+				fileCSV = new File(pathCSV);
+
+			scanner.close();
+			
+			ArrayList<Employee> listEmployee = new ArrayList<>();
 			try
 				{
 					BufferedReader br = new BufferedReader(new FileReader(fileCSV));
 					String lineBR;
-					String str2 = "(.*[/]{2,}.*)|(^[#].*)|(^$)";
+					String skipComntEmptyLine = "(.*[/]{2,}.*)|(^[#].*)|(^$)";
+					Employee.outputFormatDate = outputFormatDate;
+					Employee.inputFormatDate  = inputFormatDate;
 					while ((lineBR = br.readLine()) != null)
-					  {
-					  	// коменты пропускаем  -> // # и пустые строки
-					  	if (lineBR.matches(str2)) continue;
-					  	
-					  	String[] recorddEmlpoyee = lineBR.split(csvSeparator);
-					  	System.out.println(Arrays.toString(recorddEmlpoyee) );
-					  	System.out.println(recorddEmlpoyee.length );
-					    //field1 - string, f2-int,f3-double,f4-date,f5-string
-					  	//Валидация - стринги не трогаем, int и double =0, date пока в new Date
-					  	// 
-					  	if (!recorddEmlpoyee[1].matches("[-+]?\\d+")) 
-					  		recorddEmlpoyee[1] = "0";
-					  	//double - проверим пока как целое
-					  	if (!recorddEmlpoyee[2].matches("[-+]?\\d+[,.]?\\d*")) 
-					  		recorddEmlpoyee[2] = "0.0";
-					  	if  (!recorddEmlpoyee[3].matches("(0?[1-9]|[12][0-9]|3[01])[- /\\.](0?[1-9]|1[012])[- /\\.](19|20)\\d{2}")) 
-					  		recorddEmlpoyee[3] = new SimpleDateFormat(originalFormatDate).format(new Date());
-					  	// Заполняем...
-					  	try
+						{
+							// коменты пропускаем -> // # и пустые строки
+							if(lineBR.matches(skipComntEmptyLine))
+								continue;
+							//после последнего разделителя
+							if(lineBR.matches(".*;$"))
+								lineBR = lineBR.concat(" ");
+
+							String[] recorddEmlpoyee = lineBR.split(csvSeparator);
+          
+							// field1 - string, f2-int,f3-double,f4-date,f5-string
+							// Валидация - стринги не трогаем, int и double =0, date пока в new Date
+			
+						if(!recorddEmlpoyee[1].matches("[-+]?\\d+"))
+								recorddEmlpoyee[1] = "0";
+							// double - проверим пока как целое
+							if(!recorddEmlpoyee[2].matches("[-+]?\\d+[,.]?\\d*"))
+								recorddEmlpoyee[2] = "0.0";
+							if(!recorddEmlpoyee[3].matches("(0?[1-9]|[12][0-9]|3[01])[- /\\.](0?[1-9]|1[012])[- /\\.](19|20)\\d{2}"))
+								recorddEmlpoyee[3] = new SimpleDateFormat(inputFormatDate).format(new Date());
+							// Заполняем...
+							try
 								{
 									listEmployee.add(new Employee(recorddEmlpoyee));
 								} catch (ParseException e)
 								{
-									// TODO Auto-generated catch block
 									e.printStackTrace();
-								} 
-					  	
-					  	
-					  }
-					
-					 for (Employee employee : listEmployee)
+								
+								}
+
+						}
+
+					for (Employee employee : listEmployee)
 						{
 							System.out.println(employee);
 						}
-					
 
 				} catch (FileNotFoundException e)
 				{
@@ -152,10 +187,10 @@ public class VicTaskCSV {
 					System.out.println("No file specified.");
 
 				} catch (IOException e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		}
 
 }
@@ -166,7 +201,9 @@ class Employee {
 	double salary;
 	Date hiredDay;
 	String comment;
-	
+	static String inputFormatDate = "dd.MM.yyyy"; // inputFormatDate
+	static String outputFormatDate = "dd.MM.yyyy";
+
 	public Employee(String name, int pesonalNumber, double salary, Date hiredDay, String comment) {
 		super();
 		this.name = name;
@@ -175,21 +212,22 @@ class Employee {
 		this.hiredDay = hiredDay;
 		this.comment = comment;
 	}
+
 	public Employee(String[] volue) throws ParseException {
 		super();
 		this.name = volue[0];
 		this.pesonalNumber = Integer.parseInt(volue[1]);
 		this.salary = Double.parseDouble(volue[2]);
-		this.hiredDay = new SimpleDateFormat("dd-MM-yyyy").parse(volue[3]);
+		this.hiredDay = new SimpleDateFormat(inputFormatDate).parse(volue[3]);
 		this.comment = volue[4];
 	}
-	
+
 	@Override
 	public String toString()
 		{
 			return "Employee [name=" + name + ", pesonalNumber=" + pesonalNumber + ", salary=" + salary + "$, hiredDay="
-					+ new SimpleDateFormat("dd.MM.yyyy").format(hiredDay) + ", comment=" + comment + "]";
-			
+					+ new SimpleDateFormat(outputFormatDate).format(hiredDay) + ", comment=" + comment + "]";
+
 		}
-	  
+
 }
